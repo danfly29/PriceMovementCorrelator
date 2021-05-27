@@ -1,0 +1,5 @@
+Code's purpose is to scrape Price History from yahoo finance and use numpy and
+pandas to find how stock co-move and identify portfolios that had higher returns
+and lower standard deviations.
+
+-Daniel Soto

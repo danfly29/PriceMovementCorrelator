@@ -1,6 +1,6 @@
 class TimeValueSeries:
     '''Class for Adj. Close Price by Date for a Stock or Portfolio'''
-    def __init__(self,name,series=None, weight=1,pd):
+    def __init__(self,name,series=None, weight=1):
         '''Initialize the name and weight(in context of a Portfolio, default is 1) of a new TimeValueSeries'''
         self.name=name
         self.series=series
@@ -19,4 +19,4 @@ class TimeValueSeries:
         fhand = open('collected/'+self.name+'.csv','wb')
         fhand.write(html)
         fhand.close()
-        self.get_series_from_csv()
+        self.read_series_from_csv()

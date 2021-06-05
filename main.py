@@ -1,47 +1,33 @@
-class PriceHistoryScrapper:
-    import csv
-    import urllib.request, urllib.parse, urllib.error
-    import ssl #foe error handling
+class TimeValueSeries:
+    '''Class for Adj. Close Price by Date for a Stock or Portfolio'''
+    def __init__(self,name,series=None, weight=1):
+        '''Initialize the name and weight(in context of a Portfolio, default is 1) of a new TimeValueSeries'''
+        self.name=name
+        self.series=series
+    def read_series_from_csv(self):
+        """Method reads series from collected/csv"""
+        series = pd.read_csv('collected/'+self.name+'.csv')
+        self.series = series.set_index('Date').drop(['Open','High','Low','Volume','Close'],axis=1)
 
-    def accept_symbol(self,listy):
+    def scrape_series_from_yahoo(self):
+        '''Method scrapes into csv file Price History from Yahoo Finance defaults dates are bussines days from
+        May 13, 2016 to May 12, 2021. Prices are Adjuste Close.'''
         #Ignores certificates errors
-        ctx = ssl.create_default_context()
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
+        url = 'https://query1.finance.yahoo.com/v7/finance/download/'+self.name+'?period1=1463097600&period2=1620864000&interval=1d&events=history&includeAdjustedClose=true'
+        html = urllib.request.urlopen(url, context=ctx).read()
+        fhand = open('collected/'+self.name+'.csv','wb')
+        fhand.write(html)
+        fhand.close()
+        self.get_series_from_csv()
 
-
-
-        if listy:
-            #Create list of stocks using the contents of list of stocks file
-            fhand = open('list_of_stocks.txt')
-            stocks = []
-            for stock in fhand:
-                stocks.append(stock.strip())
-
-
-            for stock_ticker in stocks:
-                url = 'https://query1.finance.yahoo.com/v7/finance/download/'+stock_ticker+'?period1=1463097600&period2=1620864000&interval=1d&events=history&includeAdjustedClose=true'
-                html = urllib.request.urlopen(url, context=ctx).read()
-                fhand = open(stock_ticker+'.csv','wb')
-                fhand.write(html)
-                fhand.close()
-        else:
-            self.names = []
-            while True:
-                self.name =input('What is the symbol we will scrape')
-                url = 'https://query1.finance.yahoo.com/v7/finance/download/'+self.name+'?period1=1463097600&period2=1620864000&interval=1d&events=history&includeAdjustedClose=true'
-                html = urllib.request.urlopen(url, context=ctx).read()
-                fhand = open(self.name+'.csv','wb')
-                fhand.write(html)
-                fhand.close()
-                self.cont= (input('Do you have more?(y/n)')).upper()
-                if self.cont=='N':
-                    break
 
 import csv
 import urllib.request, urllib.parse, urllib.error
-import ssl #foe error handling
+import ssl #for error handling
+import pandas as pd
+import numpy as np
 
-listy=False
-p = PriceHistoryScrapper()
-p.accept_symbol(listy)
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
+vz = TimeValueSeries(name='VZ')

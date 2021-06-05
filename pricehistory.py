@@ -5,6 +5,7 @@ class TimeValueSeries:
         self.name=name
         self.series=series
     def read_series_from_csv(self):
+        import pandas as pd
         """Method reads series from collected/csv"""
         series = pd.read_csv('collected/'+self.name+'.csv')
         self.series = series.set_index('Date').drop(['Open','High','Low','Volume','Close'],axis=1)
@@ -19,15 +20,3 @@ class TimeValueSeries:
         fhand.write(html)
         fhand.close()
         self.get_series_from_csv()
-
-
-import csv
-import urllib.request, urllib.parse, urllib.error
-import ssl #for error handling
-import pandas as pd
-import numpy as np
-
-ctx = ssl.create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
-vz = TimeValueSeries(name='VZ')

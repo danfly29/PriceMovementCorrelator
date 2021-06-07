@@ -1,13 +1,13 @@
-import csv
-import urllib.request, urllib.parse, urllib.error
-import ssl #for error handling
-import pandas as pd
 import numpy as np
-from pricehistory import TimeValueSeries
+from pricehistory import TimeValueSeries , pd
 from statisticalutils import SomethingValueStatistics
 
-ctx = ssl.create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
+aapl = TimeValueSeries('AAPL')
+aapl.read_csv_adj_close()
+a= SomethingValueStatistics()
+a.calc_geometricmean_return(aapl.series)
 
-vz = TimeValueSeries(name='VZ')
+bac = TimeValueSeries('BAC')
+bac.read_csv_adj_close()
+b= SomethingValueStatistics()
+b.calc_geometricmean_return(bac.series)
